@@ -8,7 +8,7 @@
     <style media="screen">
       .list-group {
         overflow-y: scroll;
-        height: 200px;
+        height: 400px;
       }
     </style>
   </head>
@@ -16,12 +16,12 @@
 
     <div class="container">
       <div class="row" id="app">
-        <div class="offset-4 col-4">
+        <div class="offset-4 col-6">
           <li class="list-group-item active">Chat Room</li>
-          <ul class="list-group">
-            <message v-for="(message, key) in chat.messages" :key="key">@{{ message }}</message>
-            <input v-model="message" @keyup.enter="send" type="text" class="form-control" placeholder="type your messsage">
+          <ul class="list-group" v-chat-scroll>
+            <message v-for="(message, key) in chat.messages" :key="key" color="success">@{{ message }}</message>
           </ul>
+          <input v-model="message" @keyup.enter="send" type="text" class="form-control" placeholder="type your messsage">
         </div>
       </div>
     </div>
