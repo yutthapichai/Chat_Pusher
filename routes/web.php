@@ -6,17 +6,7 @@ Route::get('/', function () {
 
 Route::get('chat', 'ChatController@chat')->name('chat');
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::post('send', 'ChatController@send')->name('send');
 
 Auth::routes();
 
