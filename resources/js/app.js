@@ -14,15 +14,16 @@ const app = new Vue({
       chat: {
         messages: [],
         user: [],
-        color: []
-      }
+        color: null
+      },
+      typing: ''
     },
     methods: {
       send(){
         if(this.message.length > 0)
         this.chat.messages.push(this.message)
         this.chat.user.push('yut')
-        this.chat.color.push('success')
+        this.chat.color = 'success'
         axios.post('/send', {
           message: this.message
         })
@@ -35,13 +36,28 @@ const app = new Vue({
         });
       }
     },
-    mounted(){
-      Echo.channel('chat')
+    watch:{
+      message(){
+        Echo.private('chat')
+          .whisper('typing', {
+              name: this.message
+          });
+      }
+    },
+    mounted() {
+      Echo.private('chat')
         .listen('ChatEvent', (e) => {
             this.chat.messages.push(e.message)
-            this.chat.user.push(e.user)
-            this.chat.color.push('warning')
+            this.chat.user.push('yut')
+            this.chat.color = 'warning'
             console.log('hi :',e);
+        })
+        .listenForWhisper('typing', (e) => {
+            if(e.name != ''){
+               this.typing = 'typing...'
+            } else {
+              this.typing = ''
+            }
         });
     }
 });

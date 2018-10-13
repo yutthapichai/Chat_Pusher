@@ -24874,8 +24874,9 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     chat: {
       messages: [],
       user: [],
-      color: []
-    }
+      color: null
+    },
+    typing: ''
   },
   methods: {
     send: function send() {
@@ -24883,7 +24884,7 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
       if (this.message.length > 0) this.chat.messages.push(this.message);
       this.chat.user.push('yut');
-      this.chat.color.push('success');
+      this.chat.color = 'success';
       axios.post('/send', {
         message: this.message
       }).then(function (response) {
@@ -24894,14 +24895,27 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
       });
     }
   },
+  watch: {
+    message: function message() {
+      Echo.private('chat').whisper('typing', {
+        name: this.message
+      });
+    }
+  },
   mounted: function mounted() {
     var _this2 = this;
 
-    Echo.channel('chat').listen('ChatEvent', function (e) {
+    Echo.private('chat').listen('ChatEvent', function (e) {
       _this2.chat.messages.push(e.message);
-      _this2.chat.user.push(e.user);
-      _this2.chat.color.push('warning');
+      _this2.chat.user.push('yut');
+      _this2.chat.color = 'warning';
       console.log('hi :', e);
+    }).listenForWhisper('typing', function (e) {
+      if (e.name != '') {
+        _this2.typing = 'typing...';
+      } else {
+        _this2.typing = '';
+      }
     });
   }
 });
@@ -57241,7 +57255,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     mounted: function mounted() {
-        console.log('Component mounted.');
+        console.log('Component mounted from message.');
     }
 });
 
@@ -57261,7 +57275,7 @@ var render = function() {
       2
     ),
     _vm._v(" "),
-    _c("small", { staticClass: "badge float-right" }, [
+    _c("small", { staticClass: "badge btn-primary float-right" }, [
       _vm._v(_vm._s(_vm.user))
     ])
   ])
